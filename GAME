@@ -2,34 +2,34 @@
 #include <stdlib.h>
 #include <time.h>
 
-// Structure to hold player data
+
 typedef struct {
     char name[20];      // Name of the player
     int health;         // Health points of the player
     int attackPower;    // Attack power of the player
 } Player;
 
-// Function prototypes
+
 void attack(Player *attacker, Player *defender, int damage); // Perform an attack
 void playerTurn(Player *player, Player *enemy);              // Player's turn logic
 void computerTurn(Player *computer, Player *player);         // Computer's turn logic
 
 int main() {
-    srand(time(NULL));  // Seed the random number generator with current time
+    srand(time(NULL));  // random number generator with current time
 
     // Initialize player and computer with names, health, and attack power
     Player player = {"Player", 100, 10};
     Player computer = {"Computer", 100, 10};
 
-    // Display welcome message
+
     printf("\n=== Turn-Based Battle Game ===\n");
     printf("Get ready for battle!\n");
 
-    // Main game loop - runs as long as both players are alive
+    // runs as long as both players are alive
     while (player.health > 0 && computer.health > 0) {
-        playerTurn(&player, &computer); // Player's turn
+        playerTurn(&player, &computer); // Players turn
         if (computer.health <= 0) break; // Check if computer is defeated
-        computerTurn(&computer, &player); // Computer's turn
+        computerTurn(&computer, &player); // Computers turn
     }
 
     // Announce the result based on who survived
@@ -58,7 +58,7 @@ void playerTurn(Player *player, Player *enemy) {
     printf("\nYour move! Choose an action:\n");
     printf("1. Normal Attack\n");
     printf("2. Special Attack (Risky, high damage)\n");
-    printf("3. Heal (Recover 20 HP)\n");
+    printf("3. Heal (Recover 10 HP)\n");
     printf("Enter your choice: ");
     scanf("%d", &choice);
 
@@ -73,10 +73,10 @@ void playerTurn(Player *player, Player *enemy) {
             attack(player, enemy, (rand() % (player->attackPower * 2)) + 5);
         }
     } else if (choice == 3) {
-        // Heal action: Increase player's health by 20, max at 100
-        player->health += 20;
+        // Heal action: Increase player's health by 10, max at 100
+        player->health += 10;
         if (player->health > 100) player->health = 100;
-        printf("%s heals up! (+20 HP, Current: %d)\n", player->name, player->health);
+        printf("%s heals up! (+10 HP, Current: %d)\n", player->name, player->health);
     } else {
         // Invalid input handling
         printf("Invalid choice. You missed your turn!\n");
@@ -98,9 +98,9 @@ void computerTurn(Player *computer, Player *player) {
             attack(computer, player, (rand() % (computer->attackPower * 2)) + 5);
         }
     } else {
-        // Heal action: Increase computer's health by 20, max at 100
-        computer->health += 20;
+        // Heal action: Increase computer's health by 10, max at 100
+        computer->health += 10;
         if (computer->health > 100) computer->health = 100;
-        printf("Computer recovers health! (+20 HP, Current: %d)\n", computer->health);
+        printf("Computer recovers health! (+10 HP, Current: %d)\n", computer->health);
     }
 }
