@@ -2,34 +2,74 @@
 #include <stdlib.h>
 #include <time.h>
 
+// Class types for the player
+typedef enum {
+    WARRIOR,
+    MAGE,
+    ROGUE
+} Class;
 
+// Structure for Player
 typedef struct {
     char name[20];      // Name of the player
     int health;         // Health points of the player
     int attackPower;    // Attack power of the player
+    Class classType;    // Class type
 } Player;
 
-
+// Function declarations
 void attack(Player *attacker, Player *defender, int damage); // Perform an attack
 void playerTurn(Player *player, Player *enemy);              // Player's turn logic
 void computerTurn(Player *computer, Player *player);         // Computer's turn logic
 
+// Get class name as string
+const char* getClassName(Class c) {
+    switch (c) {
+        case WARRIOR: return "Warrior";
+        case MAGE: return "Mage";
+        case ROGUE: return "Rogue";
+        default: return "Unknown";
+    }
+}
+
 int main() {
-    srand(time(NULL));  // random number generator with current time
+    srand(time(NULL));  // Random number generator with current time
 
-    // Initialize player and computer with names, health, and attack power
-    Player player = {"Player", 100, 10};
-    Player computer = {"Computer", 100, 10};
+    // Ask player to choose a class
+    int classChoice;
+    printf("Choose your class:\n");
+    printf("1. Warrior (High HP, lower attack)\n");
+    printf("2. Mage (Low HP, high attack)\n");
+    printf("3. Rogue (Balanced stats)\n");
+    printf("Enter your choice: ");
+    scanf("%d", &classChoice);
 
+    Player player;
+    switch (classChoice) {
+        case 1:
+            player = (Player){"Player", 120, 8, WARRIOR};
+            break;
+        case 2:
+            player = (Player){"Player", 80, 15, MAGE};
+            break;
+        case 3:
+        default:
+            player = (Player){"Player", 100, 10, ROGUE};
+            break;
+    }
+
+    // Set computer as a generic balanced fighter
+    Player computer = {"Computer", 100, 10, WARRIOR};
 
     printf("\n=== Turn-Based Battle Game ===\n");
+    printf("You chose class: %s\n", getClassName(player.classType));
     printf("Get ready for battle!\n");
 
-    // runs as long as both players are alive
+    // Runs as long as both players are alive
     while (player.health > 0 && computer.health > 0) {
-        playerTurn(&player, &computer); // Players turn
+        playerTurn(&player, &computer); // Player's turn
         if (computer.health <= 0) break; // Check if computer is defeated
-        computerTurn(&computer, &player); // Computers turn
+        computerTurn(&computer, &player); // Computer's turn
     }
 
     // Announce the result based on who survived
@@ -73,9 +113,9 @@ void playerTurn(Player *player, Player *enemy) {
             attack(player, enemy, (rand() % (player->attackPower * 2)) + 5);
         }
     } else if (choice == 3) {
-        // Heal action: Increase player's health by 10, max at 100
+        // Heal action: Increase player's health by 10, max at 100 (or class max)
         player->health += 10;
-        if (player->health > 100) player->health = 100;
+        if (player->health > 120) player->health = 120; // Max for Warrior class
         printf("%s heals up! (+10 HP, Current: %d)\n", player->name, player->health);
     } else {
         // Invalid input handling
@@ -101,6 +141,6 @@ void computerTurn(Player *computer, Player *player) {
         // Heal action: Increase computer's health by 10, max at 100
         computer->health += 10;
         if (computer->health > 100) computer->health = 100;
-        printf("Computer recovers health! (+10 HP, Current: %d)\n", computer->health);
+        printf("Computer recovers health! (+10 HP, Current: %d)\n", computer->health);   
     }
 }
